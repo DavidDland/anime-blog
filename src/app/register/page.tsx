@@ -4,6 +4,7 @@ import { useState } from 'react';
 import { supabase } from '@/lib/supabaseClient';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
+import { validateEmail, getEmailValidationMessage } from '@/lib/emailValidation';
 
 export default function Register() {
   const [email, setEmail] = useState('');
@@ -11,7 +12,21 @@ export default function Register() {
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState('');
   const [error, setError] = useState('');
+  const [emailValidationMessage, setEmailValidationMessage] = useState('');
   const router = useRouter();
+
+  // Real-time email validation
+  const handleEmailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const newEmail = e.target.value;
+    setEmail(newEmail);
+    
+    if (newEmail) {
+      const validationMessage = getEmailValidationMessage(newEmail);
+      setEmailValidationMessage(validationMessage);
+    } else {
+      setEmailValidationMessage('');
+    }
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -20,7 +35,15 @@ export default function Register() {
     setMessage('');
 
     try {
-      const { data, error } = await supabase.auth.signUp({
+      // Validate email with Mailgun
+      const emailValidation = await validateEmail(email);
+      if (!emailValidation.isValid) {
+        setError(emailValidation.error || 'Invalid email address');
+        setLoading(false);
+        return;
+      }
+
+      const { error } = await supabase.auth.signUp({
         email,
         password,
       });
@@ -34,7 +57,7 @@ export default function Register() {
           router.push('/login');
         }, 3000);
       }
-    } catch (err) {
+    } catch {
       setError('An unexpected error occurred. Please try again.');
     } finally {
       setLoading(false);
@@ -70,10 +93,15 @@ export default function Register() {
                   autoComplete="email"
                   required
                   value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  className="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+                  onChange={handleEmailChange}
+                  className={`appearance-none block w-full px-3 py-2 border rounded-md placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm ${
+                    emailValidationMessage ? 'border-red-300' : 'border-gray-300'
+                  }`}
                   placeholder="Enter your email"
                 />
+                {emailValidationMessage && (
+                  <p className="mt-1 text-sm text-red-600">{emailValidationMessage}</p>
+                )}
               </div>
             </div>
 
