@@ -282,22 +282,7 @@ export default function Home() {
               </div>
             </div>
 
-            <div className="bg-gradient-to-r from-amber-50 to-yellow-50 dark:from-amber-900/20 dark:to-yellow-900/20 border border-amber-200/50 dark:border-amber-700/50 rounded-xl p-6 max-w-2xl mx-auto">
-              <div className="flex items-center justify-center space-x-2 mb-3">
-                <div className="w-8 h-8 bg-amber-500 rounded-full flex items-center justify-center">
-                  <svg className="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
-                  </svg>
-                </div>
-                <h3 className="text-lg font-semibold text-amber-800 dark:text-amber-200">
-                  Protected Content
-                </h3>
-              </div>
-              <p className="text-amber-700 dark:text-amber-300 text-center">
-                Some features are only available to authenticated users. Sign up or log in to access 
-                the full anime blog experience!
-              </p>
-            </div>
+
 
             {/* Public Post Feed for Non-Authenticated Users */}
             <div className="bg-white rounded-lg shadow-md p-6">
@@ -395,6 +380,24 @@ export default function Home() {
                   )}
                 </div>
               )}
+            </div>
+
+            {/* Protected Content Section */}
+            <div className="bg-gradient-to-r from-amber-50 to-yellow-50 dark:from-amber-900/20 dark:to-yellow-900/20 border border-amber-200/50 dark:border-amber-700/50 rounded-xl p-6 max-w-2xl mx-auto">
+              <div className="flex items-center justify-center space-x-2 mb-3">
+                <div className="w-8 h-8 bg-amber-500 rounded-full flex items-center justify-center">
+                  <svg className="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+                  </svg>
+                </div>
+                <h3 className="text-lg font-semibold text-amber-800 dark:text-amber-200">
+                  Protected Content
+                </h3>
+              </div>
+              <p className="text-amber-700 dark:text-amber-300 text-center">
+                Some features are only available to authenticated users. Sign up or log in to access 
+                the full anime blog experience!
+              </p>
             </div>
           </div>
         )}
