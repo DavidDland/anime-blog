@@ -1,73 +1,48 @@
 'use client';
 
 import { useState } from 'react';
-import { supabase } from '@/lib/supabaseClient';
 import { useUser } from '@/hooks/useUser';
+import { useCreatePost } from '@/hooks/useCreatePost';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import ProtectedRoute from '@/components/ProtectedRoute';
+import { OptimisticPostIndicator } from '@/components/OptimisticPostIndicator';
 
 export default function CreatePost() {
   const { user } = useUser();
   const router = useRouter();
+  const { createPost, isCreating, error, clearError } = useCreatePost();
   const [title, setTitle] = useState('');
   const [content, setContent] = useState('');
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setLoading(true);
-    setError('');
     setSuccess('');
+    clearError();
 
-    if (!user) {
-      setError('You must be logged in to create a post');
-      setLoading(false);
-      return;
-    }
+    const result = await createPost({ title, content });
 
-    if (!title.trim() || !content.trim()) {
-      setError('Please fill in both title and content');
-      setLoading(false);
-      return;
-    }
-
-    try {
-      const { data, error } = await supabase
-        .from('posts')
-        .insert([
-          {
-            title: title.trim(),
-            content: content.trim(),
-            author_id: user.id
-          }
-        ])
-        .select();
-
-      if (error) {
-        setError(`Error creating post: ${error.message}`);
-      } else {
-        setSuccess('Post created successfully! Redirecting...');
-        // Clear form
-        setTitle('');
-        setContent('');
-        // Redirect to home page after a short delay
-        setTimeout(() => {
-          router.push('/');
-        }, 2000);
-      }
-    } catch (err) {
-      setError('An unexpected error occurred. Please try again.');
-    } finally {
-      setLoading(false);
+    if (result) {
+      setSuccess('Post created successfully! Redirecting...');
+      // Clear form
+      setTitle('');
+      setContent('');
+      // Redirect to home page after a short delay
+      setTimeout(() => {
+        router.push('/');
+      }, 2000);
     }
   };
 
   return (
     <ProtectedRoute>
       <div className="min-h-screen bg-gray-100 py-12 px-4 sm:px-6 lg:px-8">
+        <OptimisticPostIndicator 
+          isCreating={isCreating}
+          title={title}
+          content={content}
+        />
         <div className="max-w-2xl mx-auto">
           <div className="mb-8">
             <Link
@@ -135,10 +110,10 @@ export default function CreatePost() {
               <div className="flex space-x-4">
                 <button
                   type="submit"
-                  disabled={loading}
+                  disabled={isCreating}
                   className="flex-1 bg-blue-600 hover:bg-blue-700 disabled:bg-blue-400 text-white font-medium py-2 px-4 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
                 >
-                  {loading ? 'Creating Post...' : 'Create Post'}
+                  {isCreating ? 'Creating Post...' : 'Create Post'}
                 </button>
                 <Link
                   href="/"
