@@ -1,47 +1,12 @@
 'use client';
 
-import { useState, useEffect } from 'react';
 import { useUser } from '@/hooks/useUser';
-import { supabase } from '@/lib/supabaseClient';
+import { usePosts } from '@/hooks/usePosts';
 import Link from 'next/link';
-
-interface Post {
-  id: string;
-  title: string;
-  content: string;
-  author_id: string;
-  created_at: string;
-}
 
 export default function Home() {
   const { user, loading, signOut } = useUser();
-  const [posts, setPosts] = useState<Post[]>([]);
-  const [postsLoading, setPostsLoading] = useState(true);
-  const [postsError, setPostsError] = useState('');
-
-  const fetchPosts = async () => {
-    try {
-      setPostsLoading(true);
-      const { data, error } = await supabase
-        .from('posts')
-        .select('*')
-        .order('created_at', { ascending: false });
-
-      if (error) {
-        setPostsError(`Error fetching posts: ${error.message}`);
-      } else {
-        setPosts(data || []);
-      }
-    } catch (err) {
-      setPostsError('An unexpected error occurred while fetching posts.');
-    } finally {
-      setPostsLoading(false);
-    }
-  };
-
-  useEffect(() => {
-    fetchPosts();
-  }, []);
+  const { posts, isLoading: postsLoading, error: postsError, mutate: refreshPosts } = usePosts();
 
   if (loading) {
     return (
@@ -129,7 +94,7 @@ export default function Home() {
                   Recent Posts
                 </h3>
                 <button
-                  onClick={fetchPosts}
+                  onClick={() => refreshPosts()}
                   disabled={postsLoading}
                   className="text-blue-600 hover:text-blue-500 font-medium text-sm"
                 >
@@ -278,7 +243,7 @@ export default function Home() {
                   Recent Community Posts
                 </h3>
                 <button
-                  onClick={fetchPosts}
+                  onClick={() => refreshPosts()}
                   disabled={postsLoading}
                   className="text-blue-600 hover:text-blue-500 font-medium text-sm"
                 >
