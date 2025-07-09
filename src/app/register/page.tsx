@@ -148,7 +148,7 @@ export default function Register() {
                       required
                       value={email}
                       onChange={handleEmailChange}
-                      className={`appearance-none block w-full px-3 py-2 border rounded-md placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm ${
+                      className={`appearance-none block w-full px-3 py-2 border rounded-md placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm text-black ${
                         emailValidationMessage ? 'border-red-300' : 'border-gray-300'
                       }`}
                       placeholder="Enter your email"
@@ -172,7 +172,7 @@ export default function Register() {
                       required
                       value={password}
                       onChange={(e) => setPassword(e.target.value)}
-                      className="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+                      className="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm text-black"
                       placeholder="Enter your password"
                       minLength={6}
                     />
