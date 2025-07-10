@@ -7,6 +7,7 @@ import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import ProtectedRoute from '@/components/ProtectedRoute';
 import { OptimisticPostIndicator } from '@/components/OptimisticPostIndicator';
+import Layout from '@/components/Layout';
 
 export default function CreatePost() {
   const { user } = useUser();
@@ -37,7 +38,7 @@ export default function CreatePost() {
 
   return (
     <ProtectedRoute>
-      <div className="min-h-screen bg-gray-50 dark:bg-slate-900 py-12 px-4 sm:px-6 lg:px-8">
+      <Layout>
         <OptimisticPostIndicator 
           isCreating={isCreating}
           title={title}
@@ -195,7 +196,7 @@ export default function CreatePost() {
             </ul>
           </div>
         </div>
-      </div>
+      </Layout>
     </ProtectedRoute>
   );
 } 

@@ -3,6 +3,7 @@
 import { useUser } from '@/hooks/useUser';
 import { usePosts } from '@/hooks/usePosts';
 import Link from 'next/link';
+import Layout from '@/components/Layout';
 
 export default function Home() {
   const { user, loading, signOut } = useUser();
@@ -20,55 +21,7 @@ export default function Home() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 dark:bg-slate-900">
-      {/* Header */}
-      <header className="bg-white/90 border-b border-gray-200/50 dark:bg-slate-800/90 dark:border-slate-700/50 sticky top-0 z-50">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between items-center py-4">
-            <div className="flex items-center space-x-3">
-              <div className="w-8 h-8 bg-gradient-to-r from-blue-500 to-purple-600 rounded-lg flex items-center justify-center">
-                <span className="text-white font-bold text-sm">A</span>
-              </div>
-              <h1 className="text-2xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
-                Anime Blog
-              </h1>
-            </div>
-            <nav className="flex items-center space-x-4">
-              {user ? (
-                <>
-                  <span className="text-gray-700 dark:text-gray-300 text-sm">
-                    Welcome, <span className="font-medium">{user.email}</span>
-                  </span>
-                  <button
-                    onClick={signOut}
-                    className="bg-red-500 hover:bg-red-600 text-white font-medium py-2 px-4 rounded-lg transition-colors duration-200 shadow-sm hover:shadow-md"
-                  >
-                    Sign Out
-                  </button>
-                </>
-              ) : (
-                <>
-                  <Link
-                    href="/login"
-                    className="text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 font-medium transition-colors duration-200"
-                  >
-                    Sign In
-                  </Link>
-                  <Link
-                    href="/register"
-                    className="bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 text-white font-medium py-2 px-4 rounded-lg transition-colors duration-200 shadow-sm hover:shadow-md"
-                  >
-                    Sign Up
-                  </Link>
-                </>
-              )}
-            </nav>
-          </div>
-        </div>
-      </header>
-
-      {/* Main Content */}
-      <main className="max-w-7xl mx-auto py-12 px-4 sm:px-6 lg:px-8">
+    <Layout>
         {user ? (
           // Authenticated user content
           <div className="space-y-8">
@@ -401,7 +354,6 @@ export default function Home() {
             </div>
           </div>
         )}
-      </main>
-    </div>
+    </Layout>
   );
 }
